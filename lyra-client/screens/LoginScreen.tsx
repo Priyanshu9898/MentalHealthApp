@@ -17,7 +17,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import styles from '../styles/login.styles';
 import api from '../api/api';
 import {AuthStackParamList} from '../navigation/AuthNavigator';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 type Props = StackScreenProps<AuthStackParamList, 'Login'>;
 
 const LoginScreen: React.FC<Props> = ({navigation}) => {
@@ -34,9 +34,12 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
     setLoading(true);
     try {
       const response = await api.post('/login', {email, password});
-      console.log('Logged in:', response.data);
-      // TODO: store token (AsyncStorage) and navigate to home/dashboard
-      Alert.alert('Success', 'Logged in successfully!');
+      console.log('Login response:', response.data);
+      const {token} = response.data;
+
+      // Save token to AsyncStorage
+      await AsyncStorage.setItem('token', token);
+      navigation.replace('Main');
     } catch (error: any) {
       console.error(error.response || error);
       Alert.alert(

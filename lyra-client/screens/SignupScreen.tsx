@@ -16,6 +16,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import styles from '../styles/signup.styles';
 import api from '../api/api';
 import {AuthStackParamList} from '../navigation/AuthNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = StackScreenProps<AuthStackParamList, 'Signup'>;
 
@@ -39,10 +40,17 @@ const SignupScreen: React.FC<Props> = ({navigation}) => {
     }
     setLoading(true);
     try {
-      const response = await api.post('/register', {name, email, password});
-      console.log('Registered:', response.data);
-      Alert.alert('Success', 'Account created! Please log in.');
-      navigation.replace('Login');
+      const response = await api.post('/register', {
+        name,
+        email,
+        password,
+      });
+      console.log('Signup response:', response.data);
+      const {token} = response.data;
+
+      await AsyncStorage.setItem('token', token);
+
+      navigation.replace('Main');
     } catch (error: any) {
       console.error(error.response || error);
       Alert.alert(

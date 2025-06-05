@@ -23,7 +23,11 @@ const AuthNavigator: React.FC = () => {
         }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen
+          name="Main"
+          component={MainScreen}
+          options={{gestureEnabled: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
